@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New User Added</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center bg-primary text-white">
+          <h2>New User Added</h2>
+        </div>
+        <div class="card-body">
+          <!-- Use th:text to display user fields -->
+          <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+          <p><strong>Password:</strong> <span th:text="${user.password}"></span></p>
+        </div>
+        <div class="card-footer text-center">
+          <!-- Use th:href to link to another page -->
+          <a th:href="@{/}" class="btn btn-secondary">Add Another User</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Include Bootstrap JS (Optional, for interactivity) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

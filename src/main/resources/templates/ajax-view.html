@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>API Data Display</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h2>API Data Display</h2>
+  <button id="loadData" class="btn btn-primary mb-3">Load Data</button>
+  <table class="table table-bordered">
+    <thead class="thead-dark">
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tbody id="dataBody">
+    <!-- Data will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<!-- JavaScript for XMLHttpRequest -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Attach click event to the button
+    const loadDataButton = document.getElementById("loadData");
+    const dataBody = document.getElementById("dataBody");
+
+    loadDataButton.addEventListener("click", function () {
+      // Create an XMLHttpRequest instance
+      const xhr = new XMLHttpRequest();
+
+      // Define the API endpoint
+      const apiUrl = '/ajax'; // Replace with your actual API endpoint
+
+      // Set up the request
+      xhr.open('GET', apiUrl, true);
+
+      // Define the onreadystatechange function
+      xhr.onreadystatechange = function () {
+        // Check if the request is complete
+        if (xhr.readyState === 4) { // readyState 4 means DONE
+          if (xhr.status === 200) {
+            // Parse the JSON response
+            const response = JSON.parse(xhr.responseText);
+
+            // Clear the table body
+            dataBody.innerHTML = '';
+
+            // Iterate over the response object and populate the table
+            for (const key in response) {
+              if (response.hasOwnProperty(key)) {
+                const row = document.createElement('tr');
+                const keyCell = document.createElement('td');
+                const valueCell = document.createElement('td');
+
+                keyCell.textContent = key;
+                valueCell.textContent = response[key];
+
+                row.appendChild(keyCell);
+                row.appendChild(valueCell);
+                dataBody.appendChild(row);
+              }
+            }
+          } else {
+            alert('Error fetching data from API. Status: ' + xhr.status);
+          }
+        }
+      };
+
+      xhr.onerror = function () {
+        alert('An error occurred during the transaction');
+      };
+
+      xhr.send();
+    });
+  });
+</script>
+</body>
+</html>
