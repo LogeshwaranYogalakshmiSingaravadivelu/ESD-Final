@@ -1,7 +1,6 @@
 package org.logesh.jobportal.Controller;
 
 import org.logesh.jobportal.Dao.JobDao;
-import org.logesh.jobportal.Dao.StudentDao;
 import org.logesh.jobportal.Model.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Available Jobs - JobPortal</title>
+  <link th:href="@{/assets/dist/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f8f9fa;
+    }
+
+    .content {
+      margin-left: 250px;
+      padding: 20px;
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Include Sidebar -->
+<div th:replace="Fragments/student-sidebar :: sidebar"></div>
+
+<!-- Main Content -->
+<div class="content">
+  <h1 class="mb-4 text-center">Available Jobs</h1>
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+    <tr>
+      <th>Job Title</th>
+      <th>Description</th>
+      <th>Location</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="job : ${jobs}">
+      <td th:text="${job.title}">Job Title</td>
+      <td th:text="${job.description}">Description</td>
+      <td th:text="${job.location}">Location</td>
+      <td>
+        <form th:action="@{/apply}" method="post" class="d-inline">
+          <input type="hidden" name="jobId" th:value="${job.id}">
+          <input type="hidden" name="studentEmail" th:value="${session.student.email}">
+          <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script th:src="@{/assets/dist/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

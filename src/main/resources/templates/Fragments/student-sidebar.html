@@ -1,15 +1,14 @@
-<!-- src/main/resources/templates/fragments/sidebar.html -->
 <div th:fragment="sidebar" class="sidebar">
-    <h3 class="mb-4">Recruiter Dashboard</h3>
+    <h3 class="mb-4">Student Dashboard</h3>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/job}">
-                <i class="bi bi-plus-circle"></i> Add Job
+            <a class="nav-link" th:href="@{/student-home}">
+                <i class="bi bi-briefcase"></i> Available Jobs
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/posted}">
-                <i class="bi bi-card-checklist"></i> Posted Jobs
+            <a class="nav-link" th:href="@{/jobs-applied}">
+                <i class="bi bi-clipboard-check"></i> Jobs Applied
             </a>
         </li>
         <li class="nav-item">

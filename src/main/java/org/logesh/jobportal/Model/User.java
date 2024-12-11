@@ -1,13 +1,12 @@
 package org.logesh.jobportal.Model;
 
 import jakarta.persistence.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.stereotype.Component;
 
 @Component
 @Entity
 @Table(name = "users")
-public class Student {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

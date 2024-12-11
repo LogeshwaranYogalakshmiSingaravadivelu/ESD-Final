@@ -1,0 +1,21 @@
+<!-- src/main/resources/templates/fragments/recruiter-sidebar.html -->
+<div th:fragment="sidebar" class="sidebar">
+    <h3 class="mb-4">Recruiter Dashboard</h3>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/job}">
+                <i class="bi bi-plus-circle"></i> Add Job
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/posted}">
+                <i class="bi bi-card-checklist"></i> Posted Jobs
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-danger" th:href="@{/}">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </li>
+    </ul>
+</div>

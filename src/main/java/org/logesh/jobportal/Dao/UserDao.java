@@ -3,29 +3,29 @@ package org.logesh.jobportal.Dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.logesh.jobportal.Model.Student;
+import org.logesh.jobportal.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class StudentDao {
+public class UserDao {
 
     @Autowired
     SessionFactory sf;
 
-        public void saveUser(Student student) {
+        public void saveUser(User user) {
             Session session = sf.openSession();
             Transaction t = session.beginTransaction();
-            session.persist(student);
+            session.persist(user);
             t.commit();
             session.close();
         }
 
-    public Student findByEmail(String email) {
+    public User findByEmail(String email) {
         Session session = sf.openSession();
         try {
-            String hql = "FROM Student WHERE email = :email";
-            return session.createQuery(hql, Student.class)
+            String hql = "FROM User WHERE email = :email";
+            return session.createQuery(hql, User.class)
                     .setParameter("email", email)
                     .uniqueResult();
         } finally {

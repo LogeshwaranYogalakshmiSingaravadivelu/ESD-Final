@@ -1,7 +1,7 @@
 package org.logesh.jobportal.Controller;
 
-import org.logesh.jobportal.Dao.StudentDao;
-import org.logesh.jobportal.Model.Student;
+import org.logesh.jobportal.Dao.UserDao;
+import org.logesh.jobportal.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,26 +13,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class CommonController {
 
     @Autowired
-    StudentDao studentDao;
+    UserDao userDao;
 
     @GetMapping("/")
-    public String login(Student student, ModelMap map) {
-        map.addAttribute("student", student);
+    public String login(User user, ModelMap map) {
+        map.addAttribute("student", user);
         return "Common/index";
     }
 
     @PostMapping("/")
-    public String handleForm(@ModelAttribute Student student, ModelMap map) {
-        Student existingStudent = studentDao.findByEmail(student.getEmail());
+    public String handleForm(@ModelAttribute User user, ModelMap map) {
+        User existingUser = userDao.findByEmail(user.getEmail());
 
-        if (existingStudent != null) {
+        if (existingUser != null) {
             // Store the user in the session
-            map.addAttribute("student", existingStudent);
+            map.addAttribute("student", existingUser);
 
             // Redirect based on type
-            if ("Recruiter".equalsIgnoreCase(existingStudent.getType())) {
-                return "Recruiters/home";
-            } else if ("Student".equalsIgnoreCase(existingStudent.getType())) {
+            if ("Recruiter".equalsIgnoreCase(existingUser.getType())) {
+                return "redirect:/job";
+            } else if ("User".equalsIgnoreCase(existingUser.getType())) {
                 return "redirect:/student-home";
             }
         }
@@ -41,15 +41,15 @@ public class CommonController {
     }
 
     @GetMapping("/signup")
-    public String signup(Student student, ModelMap map) {
-        map.addAttribute("student", student);
+    public String signup(User user, ModelMap map) {
+        map.addAttribute("student", user);
         return "Common/signup";
     }
 
     @PostMapping("/signup")
-    public String handleSignup(@ModelAttribute Student student, ModelMap map) {
-        studentDao.saveUser(student);
-        map.addAttribute("student", student);
-        return "Common/index";
+    public String handleSignup(@ModelAttribute User user, ModelMap map) {
+        userDao.saveUser(user);
+        map.addAttribute("student", user);
+        return "redirect:/";
     }
 }
