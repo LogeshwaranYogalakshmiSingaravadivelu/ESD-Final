@@ -22,9 +22,9 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
+      -webkit-student-select: none;
+      -moz-student-select: none;
+      student-select: none;
     }
 
     @media (min-width: 768px) {
@@ -155,7 +155,7 @@
 
 
 <main class="form-signin w-100 m-auto">
-  <form th:object="${user}" method="post">
+  <form th:object="${student}" method="post">
     <img th:src="@{/assets/brand/bootstrap-logo.svg}" alt="Logo" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
@@ -170,6 +170,15 @@
     <div class="form-floating">
       <input th:field="*{password}" type="password" class="form-control" id="floatingPassword" placeholder="Password">
       <label for="floatingPassword">Password</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <select th:field="*{type}" class="form-select" id="floatingType" required>
+        <option value="" disabled selected>Choose your role</option>
+        <option value="Student">Student</option>
+        <option value="Recruiter">Recruiter</option>
+      </select>
+      <label for="floatingType">Type</label>
     </div>
 
     <div class="form-check text-start my-3">
