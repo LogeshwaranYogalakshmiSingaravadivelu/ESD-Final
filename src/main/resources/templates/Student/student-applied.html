@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Jobs Applied - JobPortal</title>
+  <link th:href="@{/assets/dist/css/bootstrap.min.css}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f1f1f1; /* Match the recruiter background */
+    }
+
+    .sidebar {
+      min-width: 250px;
+      max-width: 250px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-right: 1px solid #dee2e6;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .nav-link.active {
+      font-weight: bold;
+      color: #0d6efd;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        min-width: 100%;
+        max-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .content {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Include Sidebar -->
+<div th:replace="Fragments/student-sidebar :: sidebar"></div>
+
+<!-- Main Content -->
+<div class="content">
+  <h1 class="mb-4 text-center">Jobs You've Applied For</h1>
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+    <tr>
+      <th>Job Title</th>
+      <th>Description</th>
+      <th>Location</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jobApplications : ${jobApplication}">
+      <td th:text="${jobApplications.title}">Job Title</td>
+      <td th:text="${jobApplications.description}">Description</td>
+      <td th:text="${jobApplications.location}">Location</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(application)}">
+      <td colspan="3" class="text-center">You haven't applied for any jobs yet.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script th:src="@{/assets/dist/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

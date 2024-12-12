@@ -1,5 +1,6 @@
 package org.logesh.jobportal.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.logesh.jobportal.Dao.UserDao;
 import org.logesh.jobportal.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CommonController {
@@ -22,7 +24,7 @@ public class CommonController {
     }
 
     @PostMapping("/")
-    public String handleForm(@ModelAttribute User user, ModelMap map) {
+    public String handleForm(@ModelAttribute User user, ModelMap map, RedirectAttributes redirectAttributes, HttpSession session) {
         User existingUser = userDao.findByEmail(user.getEmail());
 
         if (existingUser != null) {
@@ -31,9 +33,12 @@ public class CommonController {
 
             // Redirect based on type
             if ("Recruiter".equalsIgnoreCase(existingUser.getType())) {
+                redirectAttributes.addAttribute("email", existingUser.getEmail());
                 return "redirect:/job";
-            } else if ("User".equalsIgnoreCase(existingUser.getType())) {
-                return "redirect:/student-home";
+            } else if ("Student".equalsIgnoreCase(existingUser.getType())) {
+                session.setAttribute("studentEmail", user.getEmail());
+                //redirectAttributes.addAttribute("email", user.getEmail());
+                return "redirect:/student";
             }
         }
         map.addAttribute("error", "Invalid email or user not found!");

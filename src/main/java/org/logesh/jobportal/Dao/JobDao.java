@@ -61,7 +61,7 @@ public class JobDao {
         }
     }
 
-    public void deleteJobById(Long jobId) {
+    public void deleteJobById(int jobId) {
         Session session = sf.openSession();
         Transaction tx = null;
         try {
@@ -85,6 +85,20 @@ public class JobDao {
             String hql = "FROM Job";
             Query<Job> query = session.createQuery(hql, Job.class);
             return query.list();
+        } finally {
+            session.close();
+        }
+    }
+
+    public Job getJobById(int jobId) {
+        Session session = sf.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            return session.get(Job.class, jobId);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e; // Handle exceptions properly or log them
         } finally {
             session.close();
         }

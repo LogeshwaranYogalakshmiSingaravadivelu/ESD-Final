@@ -41,7 +41,7 @@ public class JobController {
     }
 
     @PostMapping("/job/delete")
-    public String deleteJob(@ModelAttribute("id") Long jobId, ModelMap map) {
+    public String deleteJob(@ModelAttribute("id") int jobId, ModelMap map) {
         jobDao.deleteJobById(jobId);
         List<Job> jobs = jobDao.getAllJobs();
         map.addAttribute("jobs", jobs);

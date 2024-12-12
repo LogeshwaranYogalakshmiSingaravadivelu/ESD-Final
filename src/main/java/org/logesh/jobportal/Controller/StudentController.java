@@ -1,5 +1,6 @@
 package org.logesh.jobportal.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.logesh.jobportal.Dao.ApplicationDao;
 import org.logesh.jobportal.Dao.JobDao;
 import org.logesh.jobportal.Model.Application;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,37 +25,63 @@ public class StudentController {
     ApplicationDao applicationDao;
 
     @GetMapping("/student")
-    public String jobList(Application application, ModelMap map) {
+    public String jobList(Application application, ModelMap map, HttpSession session) {
+
+        List<Job> allJobs = jobDao.getAllJobs();
+        String email = (String) session.getAttribute("studentEmail");
+        System.out.println(allJobs);
+        List<Application> userApplications = applicationDao.getApplicationsByStudentEmail(email);
+        System.out.println(userApplications);
+        List<Job> availableJobs = new ArrayList<>();
+
+        for (Job job : allJobs) {
+            boolean isApplied = false;
+            for (Application app : userApplications) {
+                if (app.getJobId() == job.getId()) {
+                    isApplied = true;
+                    break; // Exit inner loop if the job is already applied
+                }
+            }
+            if (!isApplied) {
+                availableJobs.add(job);
+            }
+        }
+        System.out.println(availableJobs);
+
+        map.addAttribute("jobs", availableJobs);
+        map.addAttribute("student", email);
         map.addAttribute("application", application);
         return "Student/home";
     }
 
-//    @GetMapping("/student-home")
-//    public String studentHome(@RequestParam("email") String email, ModelMap map) {
-//        // Get all job postings
-//        List<Job> allJobs = jobDao.getAllJobs();
-//        map.addAttribute("jobs", allJobs);
-//
-//        // Get jobs the student has applied to
-//        List<Application> applications = applicationDao.getApplicationsByStudentEmail(email);
-//        map.addAttribute("applications", applications);
-//
-//        // Pass the student email to the view for reuse
-//        map.addAttribute("studentEmail", email);
-//
-//        return "Student/home";
-//    }
-
     @PostMapping("/apply")
-    public String applyForJob(@RequestParam("jobId") Long jobId, @RequestParam("studentEmail") String studentEmail) {
+    public String applyForJob(@RequestParam("jobId") int jobId, @RequestParam("studentEmail") String studentEmail, ModelMap map) {
         // Save application
         Application application = new Application();
         application.setJobId(jobId);
         application.setStudentEmail(studentEmail);
 
         applicationDao.saveApplication(application);
+        map.addAttribute("success", "Application submitted successfully.");
 
-        return "redirect:/student-home?email=" + studentEmail;
+        return "redirect:/student?email=" + studentEmail;
+    }
+
+    @GetMapping("/applied")
+    public String appliedJobs(Application application, ModelMap map, HttpSession session) {
+        String email = (String) session.getAttribute("studentEmail");
+        List<Application> userApplications = applicationDao.getApplicationsByStudentEmail(email);
+
+        List<Job> appliedJobsList = new ArrayList<>();
+
+        for (Application app : userApplications) {
+            int id = app.getJobId();
+            Job job = jobDao.getJobById(id);
+            appliedJobsList.add(job);
+        }
+
+        map.addAttribute("jobApplication", appliedJobsList);
+        return "Student/student-applied";
     }
 
 
