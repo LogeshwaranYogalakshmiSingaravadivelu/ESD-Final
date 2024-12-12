@@ -14,6 +14,7 @@ public class Application {
 
     private int jobId;
     private String studentEmail;
+    private String recruiterEmail;
 
     public int getId() {
         return id;
@@ -38,4 +39,13 @@ public class Application {
     public void setStudentEmail(String studentEmail) {
         this.studentEmail = studentEmail;
     }
+
+    public String getRecruiterEmail() {
+        return recruiterEmail;
+    }
+
+    public void setRecruiterEmail(String recruiterEmail) {
+        this.recruiterEmail = recruiterEmail;
+    }
+
 }

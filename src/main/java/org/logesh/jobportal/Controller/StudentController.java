@@ -60,7 +60,8 @@ public class StudentController {
         Application application = new Application();
         application.setJobId(jobId);
         application.setStudentEmail(studentEmail);
-
+        String recruiterEmail = jobDao.getRecruiterEmail(jobId);
+        application.setRecruiterEmail(recruiterEmail);
         applicationDao.saveApplication(application);
         map.addAttribute("success", "Application submitted successfully.");
 

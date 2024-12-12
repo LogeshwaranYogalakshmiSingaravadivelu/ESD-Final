@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Applications</title>
+</head>
+<body>
+<h1>Applications for Job ID: <span th:text="${jobId}"></span></h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Application ID</th>
+        <th>Student Email</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="application : ${applications}">
+        <td th:text="${application.id}"></td>
+        <td th:text="${application.studentEmail}"></td>
+        <td th:text="${application.status}"></td>
+        <td>
+            <form th:action="@{/recruiter/application/decision}" method="post">
+                <input type="hidden" name="applicationId" th:value="${application.id}">
+                <button type="submit" name="decision" value="accept">Accept</button>
+                <button type="submit" name="decision" value="decline">Decline</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

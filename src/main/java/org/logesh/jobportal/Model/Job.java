@@ -15,17 +15,17 @@ public class Job {
     private String description;
     private String location;
     private String status;
-    private String recruiterName;
+    private String recruiterEmail;
 
     public Job(){
     }
 
-    public Job(int id, String name, String description, String location, String type, String status, String recruiterName) {
+    public Job(int id, String name, String description, String location, String type, String status, String recruiterEmail) {
         this.id = id;
         this.description = description;
         this.location = location;
         this.status = status;
-        this.recruiterName = recruiterName;
+        this.recruiterEmail = recruiterEmail;
     }
 
     public int getId() {
@@ -68,11 +68,11 @@ public class Job {
         this.status = status;
     }
 
-    public String getRecruiterName() {
-        return recruiterName;
+    public String getRecruiterEmail() {
+        return recruiterEmail;
     }
 
-    public void setRecruiterName(String recruiterName) {
-        this.recruiterName = recruiterName;
+    public void setRecruiterEmail(String recruiterEmail) {
+        this.recruiterEmail = recruiterEmail;
     }
 }

@@ -33,6 +33,7 @@ public class CommonController {
 
             // Redirect based on type
             if ("Recruiter".equalsIgnoreCase(existingUser.getType())) {
+                session.setAttribute("recruiterEmail", user.getEmail());
                 redirectAttributes.addAttribute("email", existingUser.getEmail());
                 return "redirect:/job";
             } else if ("Student".equalsIgnoreCase(existingUser.getType())) {

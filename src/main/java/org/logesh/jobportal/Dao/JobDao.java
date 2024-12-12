@@ -90,6 +90,30 @@ public class JobDao {
         }
     }
 
+    public List<Job> getAllJobsByRecruiter(String email) {
+        Session session = sf.openSession();
+        try {
+            String hql = "FROM Job WHERE recruiterEmail = :email";
+            Query<Job> query = session.createQuery(hql, Job.class);
+            query.setParameter("email", email);
+            return query.list();
+        } finally {
+            session.close();
+        }
+    }
+
+    public String getRecruiterEmail(int id) {
+        Session session = sf.openSession();
+        try {
+            String hql = "SELECT recruiterEmail FROM Job WHERE id = :id";
+            Query<String> query = session.createQuery(hql, String.class);
+            query.setParameter("id", id);
+            return query.uniqueResult();
+        } finally {
+            session.close();
+        }
+    }
+
     public Job getJobById(int jobId) {
         Session session = sf.openSession();
         Transaction tx = null;

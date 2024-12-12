@@ -5,10 +5,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.service.ServiceRegistry;
-import org.logesh.jobportal.Model.Application;
-import org.logesh.jobportal.Model.College;
-import org.logesh.jobportal.Model.Job;
-import org.logesh.jobportal.Model.User;
+import org.logesh.jobportal.Model.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +42,7 @@ public class JobPortalApplication {
 		metaDataSources.addAnnotatedClass(Job.class);
 		metaDataSources.addAnnotatedClass(Application.class);
 		metaDataSources.addAnnotatedClass(College.class);
+		metaDataSources.addAnnotatedClass(Resume.class);
 		Metadata metaData = metaDataSources.buildMetadata();
 
 		return metaData.getSessionFactoryBuilder().build();
