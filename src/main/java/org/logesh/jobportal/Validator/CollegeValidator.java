@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 
 @Component
 public class CollegeValidator implements Validator {
+
     @Override
     public boolean supports(Class<?> clazz) {
         return Application.class.isAssignableFrom(clazz);
@@ -17,18 +18,19 @@ public class CollegeValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Application application = (Application) target;
 
+        // Validate Application ID
         if (application.getId() <= 0) {
-            errors.rejectValue("applicationId", "invalid-applicationId", "Application ID must be a positive number.");
+            errors.rejectValue("id", "invalid-id", "Application ID must be a positive number.");
         }
 
-        // Check if decision is valid
+        // Validate Student Email
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "studentEmail", "empty-email", "Student email cannot be empty.");
+
+        // Validate Status
         if (application.getStatus() == null ||
                 (!application.getStatus().equalsIgnoreCase("approve") &&
                         !application.getStatus().equalsIgnoreCase("reject"))) {
-            errors.rejectValue("decision", "invalid-decision", "Decision must be 'approve' or 'reject'.");
+            errors.rejectValue("status", "invalid-status", "Status must be 'approve' or 'reject'.");
         }
-
-        // Validate student email
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "studentEmail", "empty-email", "Student email cannot be empty.");
     }
 }

@@ -80,21 +80,21 @@ public class CollegeController {
             @RequestParam("decision") String decision,
             HttpSession session) {
 
-        collegeValidator.validate(application, bindingResult);
+//        collegeValidator.validate(application, bindingResult);
+//
+//        // Check for validation errors
+//        if (bindingResult.hasErrors()) {
+//            map.addAttribute("errors", bindingResult.getAllErrors());
+//            return "College/home"; // Return to the form with error messages
+//        }
 
-        // Check for validation errors
-        if (bindingResult.hasErrors()) {
-            map.addAttribute("errors", bindingResult.getAllErrors());
-            return "College/home"; // Return to the form with error messages
+        application = applicationDao.getApplicationById(applicationId);
+
+        if (application != null) {
+            application.setStatus(decision.equals("approve") ? "Approved" : "Rejected");
+            applicationDao.updateApplication(application);
         }
 
-        Application existingApplication = applicationDao.getApplicationById(applicationId);
-
-        if (existingApplication != null) {
-            existingApplication.setStatus(decision.equals("approve") ? "Approved" : "Rejected");
-            applicationDao.updateApplication(existingApplication);
-        }
-
-        return "College/home"; // Redirect back to the dashboard
+        return "redirect:/admin"; // Redirect back to the dashboard
     }
 }

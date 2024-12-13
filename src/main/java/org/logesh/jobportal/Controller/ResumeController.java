@@ -10,7 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -29,24 +31,21 @@ public class ResumeController {
     @Autowired
     ResumeValidator resumeValidator;
 
-    @InitBinder("file")
-    protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(resumeValidator);
-    }
-
     // Handle resume upload
     @PostMapping("/resume/upload")
-    public String uploadResume(@RequestParam("file") @Valid MultipartFile file,
-                               BindingResult bindingResult,
+    public String uploadResume(@RequestParam("file") MultipartFile file,
                                ModelMap map, HttpSession session) {
         String email = (String) session.getAttribute("studentEmail");
+        Errors errors = new BeanPropertyBindingResult(file, "file");
+        resumeValidator.validate(file, errors);
+        resumeValidator.validate(file, errors);
         if (email == null) {
             map.addAttribute("errorMessage", "Session expired. Please log in again.");
             return "redirect:/login";
         }
-        if (bindingResult.hasErrors()) {
+        if (errors.hasErrors()) {
             map.addAttribute("errorMessage", "Invalid resume file. Please check the requirements.");
-            map.addAttribute("validationErrors", bindingResult.getAllErrors());
+            map.addAttribute("validationErrors", errors.getAllErrors());
             return "Student/student-resume"; // Return to the form with validation errors
         }
         try {

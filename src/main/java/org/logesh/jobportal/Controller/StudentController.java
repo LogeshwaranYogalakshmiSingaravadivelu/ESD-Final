@@ -65,20 +65,21 @@ public class StudentController {
     @PostMapping("/apply")
     public String applyForJob(@Valid Application application, @RequestParam("jobId") int jobId, @RequestParam("studentEmail") String studentEmail, BindingResult bindingResult, ModelMap map) {
         // Save application
-        studentValidator.validate(studentEmail, bindingResult);
+        application.setStatus("Applied");
+        studentValidator.validate(application, bindingResult);
 
         if (bindingResult.hasErrors()) {
             map.addAttribute("errors", bindingResult.getAllErrors());
             return "Student/home";
         }
 
-        Application Jobapplication = new Application();
-        Jobapplication.setJobId(jobId);
-        Jobapplication.setStatus("Applied");
-        Jobapplication.setStudentEmail(studentEmail);
+        application = new Application();
+        application.setJobId(jobId);
+        application.setStudentEmail(studentEmail);
+        application.setStatus("Applied");
         String recruiterEmail = jobDao.getRecruiterEmail(jobId);
-        Jobapplication.setRecruiterEmail(recruiterEmail);
-        applicationDao.saveApplication(Jobapplication);
+        application.setRecruiterEmail(recruiterEmail);
+        applicationDao.saveApplication(application);
         map.addAttribute("success", "Application submitted successfully.");
 
         return "redirect:/student?email=" + studentEmail;
