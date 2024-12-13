@@ -63,19 +63,23 @@
     </thead>
     <tbody>
     <tr th:each="jobApplications : ${jobApplication}">
-      <td th:text="${jobApplications.title}">Job Title</td>
-      <td th:text="${jobApplications.description}">Description</td>
-      <td th:text="${jobApplications.location}">Location</td>
-      <td th:text="${jobApplications.status}">Status</td>
+      <td th:text="${jobApplications['title']}">Job Title</td>
+      <td th:text="${jobApplications['description']}">Description</td>
+      <td th:text="${jobApplications['location']}">Location</td>
+      <td th:text="${jobApplications['status']}">Status</td>
       <td>
-        <button
-                type="button"
-                class="btn btn-success"
-                th:disabled="${jobApplications.status != 'Selected'}">
-          Get Approval
-        </button>
+        <form th:action="@{/student/approval}" method="post" style="display: inline;">
+          <input type="hidden" name="applicationId" th:value="${jobApplications['applicationId']}">
+          <button
+                  type="submit"
+                  class="btn btn-success"
+                  th:disabled="${jobApplications['status'] != 'Selected'}">
+            Get Approval
+          </button>
+        </form>
       </td>
     </tr>
+
     <tr th:if="${#lists.isEmpty(jobApplication)}">
       <td colspan="5" class="text-center">You haven't applied for any jobs yet.</td>
     </tr>

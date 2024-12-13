@@ -34,12 +34,13 @@ public class CommonController {
             // Redirect based on type
             if ("Recruiter".equalsIgnoreCase(existingUser.getType())) {
                 session.setAttribute("recruiterEmail", user.getEmail());
-                redirectAttributes.addAttribute("email", existingUser.getEmail());
                 return "redirect:/job";
             } else if ("Student".equalsIgnoreCase(existingUser.getType())) {
                 session.setAttribute("studentEmail", user.getEmail());
-                //redirectAttributes.addAttribute("email", user.getEmail());
                 return "redirect:/student";
+            } else if ("Admin".equalsIgnoreCase(existingUser.getType())) {
+                session.setAttribute("adminEmail", user.getEmail());
+                return "redirect:/admin";
             }
         }
         map.addAttribute("error", "Invalid email or user not found!");

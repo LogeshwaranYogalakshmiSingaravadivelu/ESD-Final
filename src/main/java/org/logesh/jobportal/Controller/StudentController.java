@@ -87,6 +87,7 @@ public class StudentController {
                 jobDetails.put("description", job.getDescription());
                 jobDetails.put("location", job.getLocation());
                 jobDetails.put("status", app.getStatus());
+                jobDetails.put("applicationId", app.getId());
 
                 appliedJobsList.add(jobDetails);
             }
@@ -95,6 +96,25 @@ public class StudentController {
         map.addAttribute("jobApplication", appliedJobsList);
         return "Student/student-applied";
     }
+
+    @PostMapping("/student/approval")
+    public String handleStudentApproval(
+            @RequestParam("applicationId") int applicationId,
+            HttpSession session) {
+
+        // Fetch the application by ID
+        Application application = applicationDao.getApplicationById(applicationId);
+
+        if (application != null && "Selected".equals(application.getStatus())) {
+            // Update the status to "Waiting"
+            application.setStatus("Waiting");
+            applicationDao.updateApplication(application);
+        }
+
+        // Redirect back to the applied jobs page
+        return "redirect:/applied";
+    }
+
 
 
 }
