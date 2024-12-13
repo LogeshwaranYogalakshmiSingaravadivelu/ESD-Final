@@ -17,6 +17,7 @@ public class ResumeDao extends Dao{
     // Save resume
     public void saveResume(Resume resume) {
         try {
+            openSession();
             beginTransaction();
             session.persist(resume);
             commitTransaction();
@@ -48,6 +49,7 @@ public class ResumeDao extends Dao{
     // Update resume
     public void updateResume(Resume resume) {
         try {
+            openSession();
             beginTransaction();
             session.merge(resume);
             commitTransaction();
@@ -62,6 +64,7 @@ public class ResumeDao extends Dao{
     // Delete resume by ID
     public void deleteResumeById(int id) {
         try {
+            openSession();
             beginTransaction();
             Resume resume = session.get(Resume.class, id);
             if (resume != null) {

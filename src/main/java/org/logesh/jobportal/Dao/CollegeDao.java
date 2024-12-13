@@ -37,6 +37,7 @@ public class CollegeDao extends Dao{
 
     public void updateApplication(Application application) {
         try {
+            openSession();
             beginTransaction();
             session.merge(application);
             commitTransaction();

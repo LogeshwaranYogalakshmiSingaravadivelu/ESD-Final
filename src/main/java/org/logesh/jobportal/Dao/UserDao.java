@@ -15,6 +15,7 @@ public class UserDao extends Dao{
 
         public void saveUser(User user) {
             try {
+                openSession();
                 beginTransaction();
                 session.persist(user);
                 commitTransaction();

@@ -16,6 +16,7 @@ public class JobDao extends Dao {
 
     public void saveJob(Job job) {
         try {
+            openSession();
             beginTransaction();
             session.persist(job);
             commitTransaction();
@@ -30,6 +31,7 @@ public class JobDao extends Dao {
 
     public void updateJob(Job job) {
         try {
+            openSession();
             beginTransaction();
             session.merge(job);
             commitTransaction();
@@ -43,6 +45,7 @@ public class JobDao extends Dao {
 
     public void deleteJob(Job job) {
         try {
+            openSession();
             beginTransaction();
             session.delete(job);
             commitTransaction();
@@ -56,6 +59,7 @@ public class JobDao extends Dao {
 
     public void deleteJobById(int jobId) {
         try {
+            openSession();
             beginTransaction();
             Job job = session.get(Job.class, jobId);
             if (job != null) {

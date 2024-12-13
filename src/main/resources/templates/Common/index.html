@@ -101,6 +101,11 @@
     <!-- Center the heading -->
     <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
 
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-danger text-center" role="alert">
+      <p th:text="${error}"></p>
+    </div>
+
     <div class="form-floating">
       <input th:field="*{email}" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
       <label for="floatingInput">Email address</label>

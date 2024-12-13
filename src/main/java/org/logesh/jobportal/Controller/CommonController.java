@@ -30,7 +30,7 @@ public class CommonController {
     public String handleForm(@ModelAttribute User user, ModelMap map, RedirectAttributes redirectAttributes, HttpSession session) {
         User existingUser = userDao.findByEmail(user.getEmail());
 
-        if (existingUser != null) {
+        if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
             // Store the user in the session
             map.addAttribute("student", existingUser);
 

@@ -18,6 +18,7 @@ public class ApplicationDao extends Dao{
 
     public void saveApplication(Application application) {
         try {
+            openSession();
             beginTransaction();
             session.persist(application);
             commitTransaction();
@@ -69,6 +70,7 @@ public class ApplicationDao extends Dao{
 
     public void updateApplication(Application application) {
         try {
+            openSession();
             beginTransaction();
             session.merge(application);
             commitTransaction();
