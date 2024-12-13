@@ -1,13 +1,16 @@
 package org.logesh.jobportal.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.logesh.jobportal.Dao.ApplicationDao;
 import org.logesh.jobportal.Dao.JobDao;
 import org.logesh.jobportal.Model.Application;
 import org.logesh.jobportal.Model.Job;
+import org.logesh.jobportal.Validator.StudentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +28,9 @@ public class StudentController {
 
     @Autowired
     ApplicationDao applicationDao;
+
+    @Autowired
+    StudentValidator studentValidator;
 
     @GetMapping("/student")
     public String jobList(Application application, ModelMap map, HttpSession session) {
@@ -57,15 +63,22 @@ public class StudentController {
     }
 
     @PostMapping("/apply")
-    public String applyForJob(@RequestParam("jobId") int jobId, @RequestParam("studentEmail") String studentEmail, ModelMap map) {
+    public String applyForJob(@Valid Application application, @RequestParam("jobId") int jobId, @RequestParam("studentEmail") String studentEmail, BindingResult bindingResult, ModelMap map) {
         // Save application
-        Application application = new Application();
-        application.setJobId(jobId);
-        application.setStatus("Applied");
-        application.setStudentEmail(studentEmail);
+        studentValidator.validate(studentEmail, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            map.addAttribute("errors", bindingResult.getAllErrors());
+            return "Student/home";
+        }
+
+        Application Jobapplication = new Application();
+        Jobapplication.setJobId(jobId);
+        Jobapplication.setStatus("Applied");
+        Jobapplication.setStudentEmail(studentEmail);
         String recruiterEmail = jobDao.getRecruiterEmail(jobId);
-        application.setRecruiterEmail(recruiterEmail);
-        applicationDao.saveApplication(application);
+        Jobapplication.setRecruiterEmail(recruiterEmail);
+        applicationDao.saveApplication(Jobapplication);
         map.addAttribute("success", "Application submitted successfully.");
 
         return "redirect:/student?email=" + studentEmail;

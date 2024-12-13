@@ -1,14 +1,19 @@
 package org.logesh.jobportal.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.logesh.jobportal.Dao.ResumeDao;
 import org.logesh.jobportal.Model.Resume;
+import org.logesh.jobportal.Validator.ResumeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,17 +26,30 @@ public class ResumeController {
     @Autowired
     ResumeDao resumeDao;
 
+    @Autowired
+    ResumeValidator resumeValidator;
+
+    @InitBinder("file")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(resumeValidator);
+    }
+
     // Handle resume upload
     @PostMapping("/resume/upload")
-    public String uploadResume(@RequestParam("file") MultipartFile file,
+    public String uploadResume(@RequestParam("file") @Valid MultipartFile file,
+                               BindingResult bindingResult,
                                ModelMap map, HttpSession session) {
         String email = (String) session.getAttribute("studentEmail");
+        if (email == null) {
+            map.addAttribute("errorMessage", "Session expired. Please log in again.");
+            return "redirect:/login";
+        }
+        if (bindingResult.hasErrors()) {
+            map.addAttribute("errorMessage", "Invalid resume file. Please check the requirements.");
+            map.addAttribute("validationErrors", bindingResult.getAllErrors());
+            return "Student/student-resume"; // Return to the form with validation errors
+        }
         try {
-            if (email == null) {
-                map.addAttribute("errorMessage", "Session expired. Please log in again.");
-                return "redirect:/login";
-            }
-
             Resume resume = new Resume();
             resume.setStudentEmail(email);
             resume.setFileName(file.getOriginalFilename());

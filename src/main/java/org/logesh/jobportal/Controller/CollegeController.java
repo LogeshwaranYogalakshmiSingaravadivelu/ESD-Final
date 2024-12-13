@@ -1,14 +1,16 @@
 package org.logesh.jobportal.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.logesh.jobportal.Dao.*;
 import org.logesh.jobportal.Model.Application;
-import org.logesh.jobportal.Model.College;
 import org.logesh.jobportal.Model.Job;
 import org.logesh.jobportal.Model.Resume;
+import org.logesh.jobportal.Validator.CollegeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +22,9 @@ import java.util.Map;
 
 @Controller
 public class CollegeController {
+
+    @Autowired
+    private CollegeValidator collegeValidator;
 
     @Autowired
     CollegeDao collegeDao;
@@ -68,14 +73,26 @@ public class CollegeController {
 
     @PostMapping("/admin/approval")
     public String handleApproval(
+            @Valid Application application,
+            BindingResult bindingResult,
+            ModelMap map,
             @RequestParam("applicationId") int applicationId,
             @RequestParam("decision") String decision,
             HttpSession session) {
-        Application application = applicationDao.getApplicationById(applicationId);
 
-        if (application != null) {
-            application.setStatus(decision.equals("approve") ? "Approved" : "Rejected");
-            applicationDao.updateApplication(application);
+        collegeValidator.validate(application, bindingResult);
+
+        // Check for validation errors
+        if (bindingResult.hasErrors()) {
+            map.addAttribute("errors", bindingResult.getAllErrors());
+            return "College/home"; // Return to the form with error messages
+        }
+
+        Application existingApplication = applicationDao.getApplicationById(applicationId);
+
+        if (existingApplication != null) {
+            existingApplication.setStatus(decision.equals("approve") ? "Approved" : "Rejected");
+            applicationDao.updateApplication(existingApplication);
         }
 
         return "College/home"; // Redirect back to the dashboard

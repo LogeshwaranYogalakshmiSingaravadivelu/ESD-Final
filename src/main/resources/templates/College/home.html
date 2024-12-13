@@ -80,6 +80,11 @@
             Approve
           </button>
         </form>
+        <div th:if="${errors != null}" class="alert alert-danger">
+          <ul>
+            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+          </ul>
+        </div>
         <form th:action="@{/admin/approval}" method="post" style="display: inline;">
           <input type="hidden" name="applicationId" th:value="${jobApplication['applicationId']}">
           <button type="submit" name="decision" value="reject"

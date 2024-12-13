@@ -41,7 +41,6 @@ public class JobPortalApplication {
 		metaDataSources.addAnnotatedClass(User.class);
 		metaDataSources.addAnnotatedClass(Job.class);
 		metaDataSources.addAnnotatedClass(Application.class);
-		metaDataSources.addAnnotatedClass(College.class);
 		metaDataSources.addAnnotatedClass(Resume.class);
 		Metadata metaData = metaDataSources.buildMetadata();
 

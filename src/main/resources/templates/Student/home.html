@@ -48,6 +48,12 @@
 <!-- Include Sidebar -->
 <div th:replace="Fragments/student-sidebar :: sidebar"></div>
 
+<div th:if="${errors != null}" class="alert alert-danger" role="alert">
+  <ul>
+    <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+  </ul>
+</div>
+
 <!-- Main Content -->
 <div class="content">
   <h1 class="mb-4 text-center">Available Jobs</h1>
