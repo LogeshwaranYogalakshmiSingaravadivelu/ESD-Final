@@ -11,46 +11,51 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ApplicationDao {
+public class ApplicationDao extends Dao{
 
     @Autowired
     SessionFactory sf;
 
     public void saveApplication(Application application) {
-        Session session = sf.openSession();
-        Transaction tx = session.beginTransaction();
-        session.persist(application);
-        tx.commit();
-        session.close();
+        try {
+            beginTransaction();
+            session.persist(application);
+            commitTransaction();
+        } catch (Exception e) {
+            rollbackTransaction();
+            throw e; // Consider logging or wrapping in a custom exception
+        } finally {
+            closeSession();
+        }
     }
 
     public List<Application> getApplicationsByStudentEmail(String email) {
-        Session session = sf.openSession();
         try {
+            openSession();
             String hql = "FROM Application WHERE studentEmail = :email";
             return session.createQuery(hql, Application.class)
                     .setParameter("email", email)
                     .list();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public List<Object[]> getStudentsEmail(String email) {
-        Session session = sf.openSession();
         try {
+            openSession();
             String hql = "SELECT a.jobId, a.studentEmail, a.status, a.id FROM Application a WHERE a.recruiterEmail = :recruiterEmail";
             Query<Object[]> query = session.createQuery(hql, Object[].class);
             query.setParameter("recruiterEmail", email);
             return query.list();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public boolean existsByJobIdAndStudentEmail(Long jobId, String studentEmail) {
-        Session session = sf.openSession();
         try {
+            openSession();
             String hql = "SELECT COUNT(a) FROM Application a WHERE a.jobId = :jobId AND a.studentEmail = :studentEmail";
             Query<Long> query = session.createQuery(hql, Long.class);
             query.setParameter("jobId", jobId);
@@ -58,30 +63,29 @@ public class ApplicationDao {
             Long count = query.uniqueResult();
             return count != null && count > 0;
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public void updateApplication(Application application) {
-        Session session = sf.openSession();
-        Transaction tx = session.beginTransaction();
         try {
-            session.update(application);
-            tx.commit();
+            beginTransaction();
+            session.merge(application);
+            commitTransaction();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e;
+            rollbackTransaction();
+            throw e; // Consider logging or wrapping in a custom exception
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public Application getApplicationById(int applicationId) {
-        Session session = sf.openSession();
         try {
+            openSession();
             return session.get(Application.class, applicationId);
         } finally {
-            session.close();
+            closeSession();
         }
     }
 

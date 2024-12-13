@@ -9,72 +9,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ResumeDao {
+public class ResumeDao extends Dao{
 
     @Autowired
     private SessionFactory sessionFactory;
 
     // Save resume
     public void saveResume(Resume resume) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            session.save(resume);
-            transaction.commit();
+            beginTransaction();
+            session.persist(resume);
+            commitTransaction();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            rollbackTransaction();
             e.printStackTrace();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     // Get resume by student email
     public Resume getResumeByEmail(String email) {
-        Session session = sessionFactory.openSession();
+        Resume resume = null;
         try {
+            openSession();
             String hql = "FROM Resume WHERE studentEmail = :email";
             Query<Resume> query = session.createQuery(hql, Resume.class);
             query.setParameter("email", email);
-            return query.uniqueResult();
+            resume = query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            session.close();
+            closeSession();
         }
+        return resume;
     }
 
     // Update resume
     public void updateResume(Resume resume) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            session.update(resume);
-            transaction.commit();
+            beginTransaction();
+            session.merge(resume);
+            commitTransaction();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            rollbackTransaction();
             e.printStackTrace();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     // Delete resume by ID
     public void deleteResumeById(int id) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            beginTransaction();
             Resume resume = session.get(Resume.class, id);
             if (resume != null) {
                 session.delete(resume);
             }
-            transaction.commit();
+            commitTransaction();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            rollbackTransaction();
             e.printStackTrace();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 }

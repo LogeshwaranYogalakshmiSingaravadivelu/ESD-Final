@@ -11,120 +11,106 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class JobDao {
+public class JobDao extends Dao {
 
-    @Autowired
-    SessionFactory sf;
 
     public void saveJob(Job job) {
-        Session session = sf.openSession();
-        Transaction tx = null;
         try {
-            tx = session.beginTransaction();
+            beginTransaction();
             session.persist(job);
-            tx.commit();
+            commitTransaction();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e; // Consider using custom exceptions
+            rollbackTransaction();
+            throw e;
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
+
     public void updateJob(Job job) {
-        Session session = sf.openSession();
-        Transaction tx = null;
         try {
-            tx = session.beginTransaction();
+            beginTransaction();
             session.merge(job);
-            tx.commit();
+            commitTransaction();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e; // Consider using custom exceptions
+            rollbackTransaction();
+            throw e;
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public void deleteJob(Job job) {
-        Session session = sf.openSession();
-        Transaction tx = null;
         try {
-            tx = session.beginTransaction();
+            beginTransaction();
             session.delete(job);
-            tx.commit();
+            commitTransaction();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e; // Consider using custom exceptions
+            rollbackTransaction();
+            throw e;
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public void deleteJobById(int jobId) {
-        Session session = sf.openSession();
-        Transaction tx = null;
         try {
-            tx = session.beginTransaction();
+            beginTransaction();
             Job job = session.get(Job.class, jobId);
             if (job != null) {
                 session.delete(job);
             }
-            tx.commit();
+            commitTransaction();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e; // Handle exceptions properly or log them
+            rollbackTransaction();
+            throw e;
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public List<Job> getAllJobs() {
-        Session session = sf.openSession();
         try {
+            openSession();
             String hql = "FROM Job";
             Query<Job> query = session.createQuery(hql, Job.class);
             return query.list();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public List<Job> getAllJobsByRecruiter(String email) {
-        Session session = sf.openSession();
         try {
+            openSession();
             String hql = "FROM Job WHERE recruiterEmail = :email";
             Query<Job> query = session.createQuery(hql, Job.class);
             query.setParameter("email", email);
             return query.list();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public String getRecruiterEmail(int id) {
-        Session session = sf.openSession();
         try {
+            openSession();
             String hql = "SELECT recruiterEmail FROM Job WHERE id = :id";
             Query<String> query = session.createQuery(hql, String.class);
             query.setParameter("id", id);
             return query.uniqueResult();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public Job getJobById(int jobId) {
-        Session session = sf.openSession();
-        Transaction tx = null;
         try {
-            tx = session.beginTransaction();
+            openSession();
             return session.get(Job.class, jobId);
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e; // Handle exceptions properly or log them
         } finally {
-            session.close();
+            closeSession();
         }
     }
 

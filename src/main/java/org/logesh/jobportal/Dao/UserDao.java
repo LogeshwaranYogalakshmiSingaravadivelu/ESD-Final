@@ -8,40 +8,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserDao {
+public class UserDao extends Dao{
 
     @Autowired
     SessionFactory sf;
 
         public void saveUser(User user) {
-            Session session = sf.openSession();
-            Transaction t = session.beginTransaction();
-            session.persist(user);
-            t.commit();
-            session.close();
+            try {
+                beginTransaction();
+                session.persist(user);
+                commitTransaction();
+            } catch (Exception e) {
+                rollbackTransaction();
+                throw e;
+            } finally {
+                closeSession();
+            }
         }
 
     public User findByEmail(String email) {
-        Session session = sf.openSession();
+        openSession();
         try {
             String hql = "FROM User WHERE email = :email";
             return session.createQuery(hql, User.class)
                     .setParameter("email", email)
                     .uniqueResult();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
     public String getUsernameByEmail(String email) {
-        Session session = sf.openSession();
+        openSession();
         try {
             String hql = "SELECT name FROM User WHERE email = :email";
             return session.createQuery(hql, String.class)
                     .setParameter("email", email)
                     .uniqueResult();
         } finally {
-            session.close();
+            closeSession();
         }
     }
 
