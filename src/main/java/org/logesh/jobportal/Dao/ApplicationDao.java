@@ -36,6 +36,18 @@ public class ApplicationDao {
         }
     }
 
+    public List<Object[]> getStudentsEmail(String email) {
+        Session session = sf.openSession();
+        try {
+            String hql = "SELECT a.jobId, a.studentEmail, a.status, a.id FROM Application a WHERE a.recruiterEmail = :recruiterEmail";
+            Query<Object[]> query = session.createQuery(hql, Object[].class);
+            query.setParameter("recruiterEmail", email);
+            return query.list();
+        } finally {
+            session.close();
+        }
+    }
+
     public boolean existsByJobIdAndStudentEmail(Long jobId, String studentEmail) {
         Session session = sf.openSession();
         try {
@@ -49,5 +61,29 @@ public class ApplicationDao {
             session.close();
         }
     }
+
+    public void updateApplication(Application application) {
+        Session session = sf.openSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            session.update(application);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    public Application getApplicationById(int applicationId) {
+        Session session = sf.openSession();
+        try {
+            return session.get(Application.class, applicationId);
+        } finally {
+            session.close();
+        }
+    }
+
 
 }

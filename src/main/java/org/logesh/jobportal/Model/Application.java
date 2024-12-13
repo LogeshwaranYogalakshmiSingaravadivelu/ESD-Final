@@ -14,7 +14,10 @@ public class Application {
 
     private int jobId;
     private String studentEmail;
+
     private String recruiterEmail;
+
+    private String status;
 
     public int getId() {
         return id;
@@ -46,6 +49,14 @@ public class Application {
 
     public void setRecruiterEmail(String recruiterEmail) {
         this.recruiterEmail = recruiterEmail;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

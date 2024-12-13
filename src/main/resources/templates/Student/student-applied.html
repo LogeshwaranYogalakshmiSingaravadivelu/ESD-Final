@@ -9,7 +9,7 @@
     body {
       display: flex;
       min-height: 100vh;
-      background-color: #f1f1f1; /* Match the recruiter background */
+      background-color: #f1f1f1;
     }
 
     .sidebar {
@@ -57,6 +57,8 @@
       <th>Job Title</th>
       <th>Description</th>
       <th>Location</th>
+      <th>Status</th>
+      <th>Action</th>
     </tr>
     </thead>
     <tbody>
@@ -64,9 +66,18 @@
       <td th:text="${jobApplications.title}">Job Title</td>
       <td th:text="${jobApplications.description}">Description</td>
       <td th:text="${jobApplications.location}">Location</td>
+      <td th:text="${jobApplications.status}">Status</td>
+      <td>
+        <button
+                type="button"
+                class="btn btn-success"
+                th:disabled="${jobApplications.status != 'Selected'}">
+          Get Approval
+        </button>
+      </td>
     </tr>
-    <tr th:if="${#lists.isEmpty(application)}">
-      <td colspan="3" class="text-center">You haven't applied for any jobs yet.</td>
+    <tr th:if="${#lists.isEmpty(jobApplication)}">
+      <td colspan="5" class="text-center">You haven't applied for any jobs yet.</td>
     </tr>
     </tbody>
   </table>

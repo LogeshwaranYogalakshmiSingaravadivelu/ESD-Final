@@ -33,4 +33,16 @@ public class UserDao {
         }
     }
 
+    public String getUsernameByEmail(String email) {
+        Session session = sf.openSession();
+        try {
+            String hql = "SELECT name FROM User WHERE email = :email";
+            return session.createQuery(hql, String.class)
+                    .setParameter("email", email)
+                    .uniqueResult();
+        } finally {
+            session.close();
+        }
+    }
+
 }

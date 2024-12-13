@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class StudentController {
@@ -59,6 +61,7 @@ public class StudentController {
         // Save application
         Application application = new Application();
         application.setJobId(jobId);
+        application.setStatus("Applied");
         application.setStudentEmail(studentEmail);
         String recruiterEmail = jobDao.getRecruiterEmail(jobId);
         application.setRecruiterEmail(recruiterEmail);
@@ -73,12 +76,20 @@ public class StudentController {
         String email = (String) session.getAttribute("studentEmail");
         List<Application> userApplications = applicationDao.getApplicationsByStudentEmail(email);
 
-        List<Job> appliedJobsList = new ArrayList<>();
+        List<Map<String, Object>> appliedJobsList = new ArrayList<>();
 
         for (Application app : userApplications) {
-            int id = app.getJobId();
-            Job job = jobDao.getJobById(id);
-            appliedJobsList.add(job);
+            int jobId = app.getJobId();
+            Job job = jobDao.getJobById(jobId);
+            if (job != null) {
+                Map<String, Object> jobDetails = new HashMap<>();
+                jobDetails.put("title", job.getTitle());
+                jobDetails.put("description", job.getDescription());
+                jobDetails.put("location", job.getLocation());
+                jobDetails.put("status", app.getStatus());
+
+                appliedJobsList.add(jobDetails);
+            }
         }
 
         map.addAttribute("jobApplication", appliedJobsList);
