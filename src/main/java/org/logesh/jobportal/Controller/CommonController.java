@@ -18,7 +18,10 @@ public class CommonController {
     UserDao userDao;
 
     @GetMapping("/")
-    public String login(User user, ModelMap map) {
+    public String login(User user, ModelMap map, HttpSession session) {
+        if (session != null) {
+            session.invalidate();
+        }
         map.addAttribute("student", user);
         return "Common/index";
     }
